@@ -6,6 +6,7 @@
 from colorama import Fore #, Back, Style
 
 import helper;
+import lexer;
   
 
 print(Fore.LIGHTBLUE_EX + "Welcome to Noah's Calculator!");
@@ -41,12 +42,20 @@ while not exit:
     print(Fore.LIGHTMAGENTA_EX + "History: ");
     for tt in history:
       print(tt, "\n");
-    break;
+    continue;
 
   # Parsing Start
 
-  tokens = usr_input.split(" ")
+  # Replace 'ans' with the last answer
+  if('ans' in usr_input):
+    try:
+      usr_input = usr_input.replace('ans', str(ans));
+    except:
+      helper.throw("'ans' token was found but no previous solution exists!");
+      continue;
 
+  tokens = lexer.lex(usr_input); #usr_input.split(" ");
+  print(tokens);
 
   if len(tokens) != 3:
     helper.throw("Please pass two numbers and an operator (num, operator, num)");
@@ -57,27 +66,34 @@ while not exit:
   num2 = tokens[2];
 
   try:
-    if num1 == 'ans': 
-      if(ans != None):
-        num1 = ans;
-      else:
-        print(Fore.RED + 'Error: No previous solution was found.' + Fore.WHITE);
-        continue;
-    else:
-      num1 = float(tokens[0]);
-
-    if num2 == 'ans':
-      if(ans != None):
-        num2 = ans;
-      else:
-        print(Fore.RED + 'Error: No previous solution was found.' + Fore.WHITE);
-        continue;
-    else: 
-      num2 = float(tokens[2]);
+    num1 = float(num1);
+    num2 = float(num2);
   except:
-    print(Fore.RED + "Invalid Syntax. Try again." 
-    + Fore.WHITE);
+    print(Fore.RED + "Invalid Syntax. Try again.");
     continue;
+
+  # try:
+  #   if num1 == 'ans': 
+  #     if(ans != None):
+  #       num1 = ans;
+  #     else:
+  #       print(Fore.RED + 'Error: No previous solution was found.' + Fore.WHITE);
+  #       continue;
+  #   else:
+  #     num1 = float(tokens[0]);
+
+  #   if num2 == 'ans':
+  #     if(ans != None):
+  #       num2 = ans;
+  #     else:
+  #       print(Fore.RED + 'Error: No previous solution was found.' + Fore.WHITE);
+  #       continue;
+  #   else: 
+  #     num2 = float(tokens[2]);
+  # except:
+  #   print(Fore.RED + "Invalid Syntax. Try again." 
+  #   + Fore.WHITE);
+  #   continue;
   
   # print("First number is: ", num1)
   # print("Second number is: ", num2)
@@ -95,4 +111,3 @@ while not exit:
   if exit: break;
 
 print(Fore.GREEN + "\nProgram complete.");
-
